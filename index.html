@@ -85,6 +85,7 @@
                 dataType: "jsonp",
             }).done(function(data) {
                 if(data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']) {
+                    $('#' + id).attr("alt", data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']['source']);
                     $('#' + id).attr("src", data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']['source']);
                 }
             });
@@ -95,7 +96,7 @@
             crop_hash = hashCode(name + '_' + variety);
 
             $('#crop-info').html(' \
-                <img id="crop-cover-' + crop_hash + '" alt="' + (crop['維基名稱'] ? crop['維基名稱'] : '') + '"> \
+                <img id="crop-cover-' + crop_hash + '" alt="' + (crop['圖片網址'] ? crop['圖片網址'] : '') + '" src="' + (crop['圖片網址'] ? crop['圖片網址'] : '') + '"> \
                 <h1>' + (crop['維基名稱'] ? '<a href="https://zh.wikipedia.org/wiki/' + crop['維基名稱'] + '" target="_blank">' + crop['中文名稱'] + '</a>' : crop['中文名稱']) + '</h1> \
                 <h2>' + crop['品種'] + '</h2> \
                 <p><b>標準分類編碼</b> ' + (crop['標準分類編碼'] ? '<a href="http://coa.gs1tw.org/app/COA/COAUser' + crop['標準分類編碼'].substring(3, 7) + '_Detail.jsp?MID=' + crop['標準分類編碼'] + '" target="_blank">' + crop['標準分類編碼'] + '</a>' : '' ) + '</p> \
@@ -108,7 +109,7 @@
                 <p><b>臺灣主產地</b> ' + crop['臺灣主產地'] + '</p> \
             ');
 
-            if(crop['維基名稱']) {
+            if(crop['圖片網址'] == "" && crop['維基名稱']) {
                 link_wiki_photo(crop['維基名稱'], 'crop-cover-' + crop_hash);
             }
         }
@@ -123,7 +124,7 @@
 
                 $('#freewall-variety').append(' \
                     <div class="brick"> \
-                    <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="No_Cover.jpg" width="100%"></a> \
+                    <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="' + (value['圖片網址'] ? value['圖片網址'] : 'No_Cover.jpg') + '" width="100%"></a> \
                     <div class="info"> \
                     <h3>' + value['中文名稱'] + '</h3> \
                     <h5><a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '">' + value['品種'] + '</a></h5> \
@@ -131,7 +132,7 @@
                     </div> \
                 ');
 
-                if(value['維基名稱']) {
+                if(value['圖片網址'] == "" && value['維基名稱']) {
                     link_wiki_photo(value['維基名稱'], 'crop-cover-' + crop_hash);
                 }
             });
@@ -150,7 +151,7 @@
 
                     $('#freewall-species').append(' \
                         <div class="brick"> \
-                        <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="No_Cover.jpg" width="100%"></a> \
+                        <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="' + (value['圖片網址'] ? value['圖片網址'] : 'No_Cover.jpg') + '" width="100%"></a> \
                         <div class="info"> \
                         <h3>' + value['中文名稱'] + '</h3> \
                         <h5><a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '">' + value['品種'] + '</a></h5> \
@@ -158,7 +159,7 @@
                         </div> \
                     ');
 
-                    if(value['維基名稱']) {
+                    if(value['圖片網址'] == "" && value['維基名稱']) {
                         link_wiki_photo(value['維基名稱'], 'crop-cover-' + crop_hash);
                     }
                 });
