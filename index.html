@@ -99,7 +99,7 @@
                 <h1>' + (crop['維基名稱'] ? '<a href="https://zh.wikipedia.org/wiki/' + crop['維基名稱'] + '" target="_blank">' + crop['中文名稱'] + '</a>' : crop['中文名稱']) + '</h1> \
                 <h2>' + crop['品種'] + '</h2> \
                 <p><b>標準分類編碼</b> ' + (crop['標準分類編碼'] ? '<a href="http://coa.gs1tw.org/app/COA/COAUser' + crop['標準分類編碼'].substring(3, 7) + '_Detail.jsp?MID=' + crop['標準分類編碼'] + '" target="_blank">' + crop['標準分類編碼'] + '</a>' : '' ) + '</p> \
-                <p><b>市場代號</b> ' + (crop['行情代號(水產品代號)'] ? '<a href="http://magro.coa.gov.tw/outside/transaction/Search1.aspx?txt_m_tc_cod=' + crop['行情代號(水產品代號)'] + '&ddl_m_m_id=104&__M=False" target="_blank">' + crop['行情代號(水產品代號)'] + '</a>' : '') + '</p> \
+                <p><b>市場代號</b> ' + (crop['行情代號(水產品代號)'] ? '<a href="http://magro.coa.gov.tw/outside/transaction/Search1.aspx?txt_m_tc_cod=' + crop['行情代號(水產品代號)'] + '&ddl_m_m_id=104&__M=False" target="_blank">' + crop['行情代號(水產品代號)'] + ' ' + crop['市場名稱'] + '</a>' : '') + '</p> \
                 <p><b>俗名</b> ' + crop['俗名名稱'] + '</p> \
                 <p><b>英文名稱</b> ' + crop['英文名稱'] + '</p> \
                 <p><b>學名名稱</b> ' + crop['學名名稱'] + '</p> \
