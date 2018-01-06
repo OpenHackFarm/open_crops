@@ -52,7 +52,7 @@ $(function(){
         console.log(objectifyForm($('#activity_form').serializeArray()));
 
         $.ajax({
-            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop',
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload',
             headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
             type: 'post',
             data: { "fields": objectifyForm($('#activity_form').serializeArray()) },
