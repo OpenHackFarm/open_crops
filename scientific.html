@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenCrop Upload</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+        .jumbotron h1, .jumbotron p {
+            padding-left: 60px;
+            padding-right: 60px;
+        }
+
+        .col-md {
+            margin: 0 auto;
+            max-width: 500px
+        }
+    </style>
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.1/fingerprint2.min.js"></script>
+  <script src="http://chriszarate.github.io/sheetrock/dist/sheetrock.min.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+
+      <link href="https://sdkcarlos.github.io/sites/holdon-resources/css/HoldOn.css" rel="stylesheet">
+          <script src="https://sdkcarlos.github.io/sites/holdon-resources/js/HoldOn.js"></script>
+
+    <script>
+    var fingerprint;
+    var email;
+
+    new Fingerprint2().get(function(result, components){
+        fingerprint = result;
+        console.log(result); //a hash, representing your device fingerprint
+        console.log(components); // an array of FP components
+        $('#fingerprint').val(fingerprint);
+    });
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+$(document).ready(function() {
+    $('#common_names_zh').val(decodeURIComponent(getUrlParameter('name')));
+});
+
+function objectifyForm(formArray) {//serialize data function
+
+  var returnArray = {};
+  for (var i = 0; i < formArray.length; i++){
+    returnArray[formArray[i]['name']] = formArray[i]['value'];
+  }
+  return returnArray;
+}
+
+function open_crop_binding(upload_id, scientific_id){
+       console.log(upload_id);
+       console.log(scientific_id);
+       $.ajax({
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload/' + upload_id,
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV',
+              'Content-Type' : 'application/json',
+            },
+            type: 'PATCH',
+            data: JSON.stringify({ "fields": {"open_crop_binding": scientific_id} }),
+            success:function(data){
+                alert('上傳成功，謝謝您的幫忙！');
+
+                window.location = "/verify.html";
+                // alert('Success!');
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+                // alert('Error!');
+                /*弹出jqXHR对象的信息*/
+                // alert(jqXHR.responseText);
+                // alert(jqXHR.status);
+                // alert(jqXHR.readyState);
+                //  alert(jqXHR.statusText);
+                /*弹出其他两个参数的信息*/
+                // alert(textStatus);
+                // alert(errorThrown);
+            }
+        });
+}
+
+$(function(){
+    $("#activity_form").submit(function( event ) {
+        console.log($('#activity_form').serializeArray());
+        event.preventDefault();
+
+        console.log($('#activity_form').serializeArray());
+        console.log(objectifyForm($('#activity_form').serializeArray()));
+
+        $.ajax({
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop',
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+            type: 'post',
+            data: { "fields": objectifyForm($('#activity_form').serializeArray()) },
+            success:function(data){
+              open_crop_binding(getUrlParameter('id'), data['id']);
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+                alert('上傳失敗');
+                /*弹出jqXHR对象的信息*/
+                //alert(jqXHR.responseText);
+                //alert(jqXHR.status);
+                //alert(jqXHR.readyState);
+                //alert(jqXHR.statusText);
+                /*弹出其他两个参数的信息*/
+                //alert(textStatus);
+                //alert(errorThrown);
+            }
+        });
+    });
+});
+    </script>
+</head>
+<body>
+    <div class="jumbotron">
+        <!-- <h1>Upload</h1> -->
+        <p>開放作物資料庫 - 新增專屬頁面</p>
+    </div>
+
+
+    <div class="col-md">
+        <form id="activity_form">
+             <div class="form-group">
+               <label for="inputdefault">* 名稱</label>
+               <input class="form-control" id="common_names_zh" name="common_names_zh" type="text" readonly>
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">維基百科連結網址 <a href="https://zh.wikipedia.org/wiki/%E8%94%AC%E8%8F%9C%E5%88%97%E8%A1%A8" target="_blank">維基百科蔬菜列表</a></label>
+               <input class="form-control" id="wiki_zh" name="wiki_zh" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">臺灣物種名錄連結網址 <a href="http://taibnet.sinica.edu.tw/home.php?" target="_blank">臺灣物種名錄</a></label>
+               <input class="form-control" id="TaiBNET" name="TaiBNET" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">二名法 (Family)</label>
+               <input class="form-control" id="binomial_name" name="binomial_name" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">科 (中文)</label>
+               <input class="form-control" id="family_zh" name="family_zh" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">Family (English)</label>
+               <input class="form-control" id="family" name="family" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">屬 (中文)</label>
+               <input class="form-control" id="genus_zh" name="genus_zh" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">Genus (English)</label>
+               <input class="form-control" id="genus" name="genus" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">種 (中文)</label>
+               <input class="form-control" id="species_zh" name="species_zh" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">Species (English)</label>
+               <input class="form-control" id="species" name="species" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">亞種 / 變種 / 栽培變種 (中文)</label>
+               <input class="form-control" id="variety_zh" name="variety_zh" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">Variety (English)</label>
+               <input class="form-control" id="variety" name="variety" type="text">
+             </div>
+             <div class="form-group">
+               <label for="inputdefault">原產地</label>
+               <input class="form-control" id="origin" name="origin" type="text">
+             </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">入侵性</label>
+                <select id="invasive" class="form-control" name="invasive">
+                    <option value="" selected></option>;
+                    <option value="Y">有</option>;
+                    <option value="N">無</option>;
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">植株習性</label>
+                <select id="habit" class="form-control" name="habit">
+                    <option value="" selected></option>;
+                    <option value="草本">草本</option>;
+                    <option value="草質藤本">草質藤本</option>;
+                    <option value="灌木">灌木</option>;
+                    <option value="喬木">喬木</option>;
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">覆地特性</label>
+                <select id="ground_cover" class="form-control" name="ground_cover">
+                    <option value="" selected></option>;
+                    <option value="Y">有</option>;
+                    <option value="N">無</option>;
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">水生</label>
+                <select id="aquatic" class="form-control" name="aquatic">
+                    <option value="" selected></option>;
+                    <option value="Y">可</option>;
+                    <option value="N">不是</option>;
+                </select>
+            </div>
+            <input id="fingerprint" type="hidden" name="fingerprint">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">新增</button>
+        </form>
+    </div>
+</body>
+</html>
