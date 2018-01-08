@@ -2,14 +2,28 @@
 <head>
   <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" media="screen">
   <link href="skin/css/main.css" rel="stylesheet" media="screen">
+  <style>
+    #new-search-area {
+        width: 100%;
+        clear: both;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    #new-search-area input {
+        width: 600px;
+        font-size: 20px;
+        padding: 5px;
+    }
+  </style>
 
   <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
   <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="/app.js"></script>
   <script>
   $(document).ready(function() {
         $.ajax({
           // url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sort=" + jQuery.param({fields: ["family"]}),
-          url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
+            url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
             headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
             type: 'get',
             success:function(data){
@@ -35,8 +49,8 @@
                     habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
                   }
                   cols.push(habit);
-                  cols.push(li['fields']['common_names_zh']);
-                  cols.push((li['fields']['family']?li['fields']['family'] + ' ':'') + (li['fields']['family_zh']?li['fields']['family_zh']:''));
+                  cols.push('<a href="/detail.html?id=' + li['id'] + '">' + li['fields']['common_names_zh'] + '</a>');
+                    cols.push((li['fields']['family'] ? '<a href="/index.html?family=' + li['fields']['family'] + '">' + li['fields']['family'] + '</a> ':'') + (li['fields']['family_zh']?li['fields']['family_zh']:''));
                   cols.push((li['fields']['genus']?li['fields']['genus'] + ' ':'') + (li['fields']['genus_zh']?li['fields']['genus_zh']:''));
                   cols.push((li['fields']['species']?li['fields']['species'] + ' ':'') + (li['fields']['species_zh']?li['fields']['species_zh']:''));
                   cols.push((li['fields']['variety']?li['fields']['variety'] + ' ':'') + (li['fields']['variety_zh']?li['fields']['variety_zh']:''));
@@ -47,11 +61,16 @@
 
 				// console.log(dataSet);
 
-				$('#example').DataTable( {
-				  data: dataSet,
-                  order: [[1, 'asc']],
-				  paging: false
-				} );
+                    $('#example').DataTable( {
+                        data: dataSet,
+                        order: [[2, 'asc']],
+                        paging: false,
+                        language: { "search": "" },
+                        initComplete : function() {
+                            $("#example_filter").detach().appendTo('#new-search-area');
+                        },
+                        oSearch: {"sSearch": getUrlParameter('family')}
+                    } );
             },
             error:function(jqXHR, textStatus, errorThrown) {
                 //alert(jqXHR.responseText);
@@ -68,6 +87,7 @@
   </script>
 </head>
 <body>
+  <center><div id="new-search-area"></div></center>
   <table id="example" class="display" cellspacing="0" width="100%">
 	  <thead>
 		  <tr>
