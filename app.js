@@ -75,6 +75,23 @@ function get_opencrop(id) {
             data['species'] = (crop['fields']['species']?crop['fields']['species'] + ' ':'') + (crop['fields']['species_zh']?crop['fields']['species_zh']:'');
             data['variety'] = (crop['fields']['variety']?crop['fields']['variety'] + ' ':'') + (crop['fields']['variety_zh']?crop['fields']['variety_zh']:'');
             data['origin'] = crop['fields']['origin'];
+            habit = '';
+            if(crop['fields']['habit'] == '草本') {
+                habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" data-original-title="">Shrub</div>';
+            } else if(crop['fields']['habit'] == '草質藤本') {
+                habit += '<div class="iconbar-icon niche-icon niche-icon-climber" data-original-title="">Climber</div>';
+            } else if(crop['fields']['habit'] == '喬木') {
+                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+            } else if(crop['fields']['habit'] == '灌木') {
+                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+            }
+            if(crop['fields']['ground_cover'] == 'Y') {
+                habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" data-original-title="">Soil surface</div>';
+            }
+            if(crop['fields']['aquatic'] == 'Y') {
+                habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
+            }
+            data['icons'] = habit;
 
             render_detail(data);
         },
