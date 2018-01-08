@@ -49,8 +49,8 @@
                     habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
                   }
                   cols.push(habit);
-                  cols.push('<a href="/detail.html?id=' + li['id'] + '">' + li['fields']['common_names_zh'] + '</a>');
-                    cols.push((li['fields']['family'] ? '<a href="/index.html?family=' + li['fields']['family'] + '">' + li['fields']['family'] + '</a> ':'') + (li['fields']['family_zh']?li['fields']['family_zh']:''));
+                  cols.push('<a href="detail.html?id=' + li['id'] + '">' + li['fields']['common_names_zh'] + '</a>');
+                    cols.push((li['fields']['family'] ? '<a href="index.html?family=' + li['fields']['family'] + '">' + li['fields']['family'] + '</a> ':'') + (li['fields']['family_zh']?li['fields']['family_zh']:''));
                   cols.push((li['fields']['genus']?li['fields']['genus'] + ' ':'') + (li['fields']['genus_zh']?li['fields']['genus_zh']:''));
                   cols.push((li['fields']['species']?li['fields']['species'] + ' ':'') + (li['fields']['species_zh']?li['fields']['species_zh']:''));
                   cols.push((li['fields']['variety']?li['fields']['variety'] + ' ':'') + (li['fields']['variety_zh']?li['fields']['variety_zh']:''));
