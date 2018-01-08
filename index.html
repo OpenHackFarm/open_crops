@@ -1,233 +1,96 @@
-<!doctype html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>農作物查詢</title>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.4.2/tabletop.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/taffydb/2.7.2/taffy-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/freewall/1.0.5/freewall.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://vnjs.net/www/project/freewall/example/css/pinterest-style.css" />
-    <style type="text/css">
-        body {
-        background: rgba(231, 231, 231, 0.43);
-        }
-        .free-wall {
-            margin: 15px;
-        }
-        .brick {
-            width: 221.2px;
-        }
-        .info {
-            padding: 15px;
-            color: #333;
-        }
-        .brick img {
-            margin: 0px;
-            padding: 0px;
-            display: block;
-        }
-    </style>
+  <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" media="screen">
+  <link href="skin/css/main.css" rel="stylesheet" media="screen">
 
-    <script type="text/javascript">
-        function getURLParameter(name) {
-            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
-        }
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script>
+  $(document).ready(function() {
+        $.ajax({
+          // url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sort=" + jQuery.param({fields: ["family"]}),
+          url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+            type: 'get',
+            success:function(data){
+				// console.log(data);
+				dataSet = [];
 
-        function hashCode(str) {
-            var hash = 0;
-            if (str.length == 0) return hash;
-            for (i = 0; i < str.length; i++) {
-                char = str.charCodeAt(i);
-                hash = ((hash<<5)-hash)+char;
-                hash = hash & hash; // Convert to 32bit integer
+				$.each(data['records'], function(idx, li) {
+                  cols = [];
+				  habit = '';
+				  // if(li['fields']['habit'] == '草本') {
+					//habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" data-original-title="">Shrub</div>';
+                  if(li['fields']['habit'] == '草質藤本') {
+					habit += '<div class="iconbar-icon niche-icon niche-icon-climber" data-original-title="">Climber</div>';
+                  } else if(li['fields']['habit'] == '喬木') {
+					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+                  } else if(li['fields']['habit'] == '灌木') {
+					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+                  }
+				  if(li['fields']['ground_cover'] == 'Y') {
+					habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" data-original-title="">Soil surface</div>';
+                  }
+				  if(li['fields']['aquatic'] == 'Y') {
+                    habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
+                  }
+                  cols.push(habit);
+                  cols.push(li['fields']['common_names_zh']);
+                  cols.push((li['fields']['family']?li['fields']['family'] + ' ':'') + (li['fields']['family_zh']?li['fields']['family_zh']:''));
+                  cols.push((li['fields']['genus']?li['fields']['genus'] + ' ':'') + (li['fields']['genus_zh']?li['fields']['genus_zh']:''));
+                  cols.push((li['fields']['species']?li['fields']['species'] + ' ':'') + (li['fields']['species_zh']?li['fields']['species_zh']:''));
+                  cols.push((li['fields']['variety']?li['fields']['variety'] + ' ':'') + (li['fields']['variety_zh']?li['fields']['variety_zh']:''));
+                  cols.push((li['fields']['origin']?li['fields']['origin'] + ' ':''));
+
+                  dataSet.push(cols);
+				});
+
+				// console.log(dataSet);
+
+				$('#example').DataTable( {
+				  data: dataSet,
+                  order: [[1, 'asc']],
+				  paging: false
+				} );
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+                //alert(jqXHR.responseText);
+                //alert(jqXHR.status);
+                //alert(jqXHR.readyState);
+                //alert(jqXHR.statusText);
+                /*弹出其他两个参数的信息*/
+                //alert(textStatus);
+                //alert(errorThrown);
             }
-            return hash;
-        }
-
-        var wall_variety = null;
-        var wall_specieswall = null;
-        var searchList = [];
-        var tableData = null;
-        var crop_name = getURLParameter('name') ? getURLParameter('name') : '';
-        var crop_variety = getURLParameter('variety') ? getURLParameter('variety') : '';
-
-        var public_spreadsheet_url = 'https://docs.google.com/spreadsheet/pub?key=1tXT52q2EbQTRKLOxHZU_blGzI6yfPbBR72Gw0wpHd0I&output=html';
-        function init() {
-            Tabletop.init({
-                key: public_spreadsheet_url,
-                callback: processData,
-                simpleSheet: true
-            });
-        }
-
-        function processData(data) {
-            tableData = TAFFY(data);
-
-            $.each(tableData().get(), function( index, value ) {
-                searchList.push({id: value['id'], category: value['分類'], name: value['中文名稱'], variety: value['品種'], label: value['中文名稱'] + '-' + value['品種'] + ' (' + value['俗名名稱'] + ',' + value['市場名稱'] + ') (' + value['行情代號(水產品代號)'] + ')'});
-            });
-
-            if(crop_name) {
-                show_crop_info(crop_name, crop_variety);
-                show_crop_other_variety(crop_name, crop_variety);
-
-                crop = tableData({中文名稱: {"is": crop_name}, 品種: {"is": crop_variety}}).first() ;
-                show_crop_other_species(crop_name, crop['分類']);
-            }
-        }
-
-        function link_wiki_photo(title, id) {
-            $.ajax({
-                url: "https://zh.wikipedia.org/w/api.php?action=query&titles=" + title + "&prop=pageimages&format=json&pithumbsize=300",
-                dataType: "jsonp",
-            }).done(function(data) {
-                if(data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']) {
-                    $('#' + id).attr("alt", data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']['source']);
-                    $('#' + id).attr("src", data['query']['pages'][Object.keys(data['query']['pages'])[0]]['thumbnail']['source']);
-                }
-            });
-        }
-
-        function show_crop_info(name, variety) {
-            crop = tableData({中文名稱: {"is": name}, 品種: {"is": variety}}).first() ;
-            crop_hash = hashCode(name + '_' + variety);
-
-            $('#crop-info').html(' \
-                <img id="crop-cover-' + crop_hash + '" alt="' + (crop['圖片網址'] ? crop['圖片網址'] : '') + '" src="' + (crop['圖片網址'] ? crop['圖片網址'] : '') + '"> \
-                <h1>' + (crop['維基名稱'] ? '<a href="https://zh.wikipedia.org/wiki/' + crop['維基名稱'] + '" target="_blank">' + crop['中文名稱'] + '</a>' : crop['中文名稱']) + '</h1> \
-                <h2>' + crop['品種'] + '</h2> \
-                <p><b>標準分類編碼</b> ' + (crop['標準分類編碼'] ? '<a href="http://coa.gs1tw.org/app/COA/COAUser' + crop['標準分類編碼'].substring(3, 7) + '_Detail.jsp?MID=' + crop['標準分類編碼'] + '" target="_blank">' + crop['標準分類編碼'] + '</a>' : '' ) + '</p> \
-                <p><b>市場代號</b> ' + crop['行情代號(水產品代號)'] + ' ' + crop['市場名稱'] + ' ' + 
-                    (crop['行情代號(水產品代號)'] ? '<a href="http://magro.coa.gov.tw/outside/transaction/Search1.aspx?txt_m_tc_cod=' + crop['行情代號(水產品代號)'] + '&ddl_m_m_id=104&__M=False" target="_blank">(農田小幫手)' + '</a>' : '') + ' ' + 
-                    (crop['行情代號(水產品代號)'] ? '<a href="http://www.twfood.cc/vege/' + crop['行情代號(水產品代號)'] + '" target="_blank">(台灣當季食材)' + '</a>' : '') + 
-                '</p> \
-                <p><b>俗名</b> ' + crop['俗名名稱'] + '</p> \
-                <p><b>英文名稱</b> ' + crop['英文名稱'] + '</p> \
-                <p><b>學名名稱</b> ' + crop['學名名稱'] + '</p> \
-                <p><b>科名</b> ' + crop['科名'] + '</p> \
-                <p><b>屬名</b> ' + crop['屬名'] + '</p> \
-                <p><b>種名</b> ' + crop['種名'] + '</p> \
-                <p><b>亞種</b> ' + crop['亞種'] + '</p> \
-                <p><b>臺灣主產地</b> ' + crop['臺灣主產地'] + '</p> \
-            ');
-
-            if(crop['圖片網址'] == "" && crop['維基名稱']) {
-                link_wiki_photo(crop['維基名稱'], 'crop-cover-' + crop_hash);
-            }
-        }
-
-        function show_crop_other_variety(name, variety) {
-            crops = tableData({中文名稱: {"is": name}, 品種: {"!is": variety}}).get();
-
-            $('#freewall-variety').empty();
-
-            $.each(crops, function( index, value ) {
-                crop_hash = hashCode(value['中文名稱'] + '_' + value['品種']);
-
-                $('#freewall-variety').append(' \
-                    <div class="brick"> \
-                    <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="' + (value['圖片網址'] ? value['圖片網址'] : 'No_Cover.jpg') + '" width="100%"></a> \
-                    <div class="info"> \
-                    <h3>' + value['中文名稱'] + '</h3> \
-                    <h5><a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '">' + value['品種'] + '</a></h5> \
-                    </div> \
-                    </div> \
-                ');
-
-                if(value['圖片網址'] == "" && value['維基名稱']) {
-                    link_wiki_photo(value['維基名稱'], 'crop-cover-' + crop_hash);
-                }
-            });
-
-            wall_variety.fitWidth();
-        }
-
-        function show_crop_other_species(name, category) {
-            if(name && category) {
-                crops = tableData({中文名稱: {"!is": name}, 品種: ["統稱(其他)", ""], 分類: category}).get();
-
-                $('#freewall-species').empty();
-
-                $.each(crops, function( index, value ) {
-                    crop_hash = hashCode(value['中文名稱'] + '_' + value['品種']);
-
-                    $('#freewall-species').append(' \
-                        <div class="brick"> \
-                        <a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '"><img id="crop-cover-' + crop_hash + '" src="' + (value['圖片網址'] ? value['圖片網址'] : 'No_Cover.jpg') + '" width="100%"></a> \
-                        <div class="info"> \
-                        <h3>' + value['中文名稱'] + '</h3> \
-                        <h5><a href="?name=' + value['中文名稱'] + '&variety=' + value['品種'] + '">' + value['品種'] + '</a></h5> \
-                        </div> \
-                        </div> \
-                    ');
-
-                    if(value['圖片網址'] == "" && value['維基名稱']) {
-                        link_wiki_photo(value['維基名稱'], 'crop-cover-' + crop_hash);
-                    }
-                });
-
-                wall_species.fitWidth();
-            }
-        }
-
-        $(function() {
-            init();
-
-            $( "#tags" ).autocomplete({
-                source: searchList,
-                select: function (event, ui) {
-                    window.location.replace('?name=' + ui.item.name + '&variety=' + ui.item.variety);
-                }
-            });
-
-            // initial wall
-            wall_variety = new freewall("#freewall-variety");
-            wall_species = new freewall("#freewall-species");
         });
-    </script>
+
+  } );
+  </script>
 </head>
 <body>
-    <div class="ui-widget">
-        <label for="tags">Search: </label>
-        <input id="tags">
-        <a href="https://github.com/a0726h77/open_crops" target="_blank">GitHub</a>
-        <a href="https://docs.google.com/spreadsheets/d/1tXT52q2EbQTRKLOxHZU_blGzI6yfPbBR72Gw0wpHd0I/edit?usp=sharing" target="_blank">Edit Sheet</a>
-    </div>
-
-    <div id="crop-info">
-    </div>
-
-    <div id=crop-other-variety>
-        <h2>其他品種</h2>
-
-        <div id="freewall-variety" class="free-wall">
-            <div class="brick" style="display: none;">
-                <img src="No_Cover.jpg" width="100%">
-                <div class="info">
-                    <h3></h3>
-                    <h5></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id=crop-other-species>
-        <h2>其他形態 (變種)</h2>
-        <div id="freewall-species" class="free-wall">
-            <div class="brick" style="display: none;">
-                <img src="No_Cover.jpg" width="100%">
-                <div class="info">
-                    <h3></h3>
-                    <h5></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    </script>
+  <table id="example" class="display" cellspacing="0" width="100%">
+	  <thead>
+		  <tr>
+			  <th>特性</th>
+			  <th>名稱</th>
+			  <th>科</th>
+			  <th>屬</th>
+			  <th>種</th>
+			  <th>品種</th>
+			  <th>原產地</th>
+		  </tr>
+	  </thead>
+	  <tfoot>
+		  <tr>
+			  <th>特性</th>
+			  <th>名稱</th>
+			  <th>科</th>
+			  <th>屬</th>
+			  <th>種</th>
+			  <th>品種</th>
+			  <th>原產地</th>
+		  </tr>
+	  </tfoot>
+  </table>
 </body>
 </html>
