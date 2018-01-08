@@ -75,6 +75,9 @@ function get_opencrop(id) {
             data['species'] = (crop['fields']['species']?crop['fields']['species'] + ' ':'') + (crop['fields']['species_zh']?crop['fields']['species_zh']:'');
             data['variety'] = (crop['fields']['variety']?crop['fields']['variety'] + ' ':'') + (crop['fields']['variety_zh']?crop['fields']['variety_zh']:'');
             data['origin'] = crop['fields']['origin'];
+            data['invasive'] = (crop['fields']['invasive'] == 'Y') ? '具有入侵性' : '';
+            data['cultivation'] = crop['fields']['cultivation'];
+            data['row_spacing'] = crop['fields']['row_spacing'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
                 habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" data-original-title="">Shrub</div>';
@@ -224,8 +227,8 @@ function render(mustache, data, id) {
 }
 
 function render_detail(data) {
-    render('/detail.header.mustache', data, '#header');
-    render('/detail.heading.mustache', data, '#heading');
-    render('/detail.picture.mustache', data, '#picture');
-    render('/detail.information.mustache', data, '#information');
+    render('detail.header.mustache', data, '#header');
+    render('detail.heading.mustache', data, '#heading');
+    render('detail.picture.mustache', data, '#picture');
+    render('detail.information.mustache', data, '#information');
 }
