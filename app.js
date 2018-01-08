@@ -13,7 +13,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-function get_opencrop(id){
+function get_opencrop(id) {
     $.ajax({
         url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/" + id,
         headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
@@ -51,6 +51,57 @@ function get_opencrop(id){
             // } );
         },
         error:function(jqXHR, textStatus, errorThrown) {
+            //alert(jqXHR.responseText);
+            //alert(jqXHR.status);
+            //alert(jqXHR.readyState);
+            //alert(jqXHR.statusText);
+            /*弹出其他两个参数的信息*/
+            //alert(textStatus);
+            //alert(errorThrown);
+        }
+    });
+}
+
+
+function search_unique_opencrop(name) {
+    data = null;
+
+    $.ajax({
+        url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?filterByFormula=(FIND("' + name + '",{common_names_zh}))',
+        headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+        type: 'get',
+        async: false,
+        success:function(crop){
+            if(crop['records'].length == 1){
+                crop_list = crop['records'][0]['fields']['common_names_zh'].split(',');
+
+                if(crop_list.indexOf(name) > -1){
+                     data = crop['records'][0];
+                }
+            }
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+        }
+    });
+
+    return data;
+}
+
+function binding_opencrop(upload_id, opencrop_id) {
+    $.ajax({
+        url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload/' + upload_id,
+        headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV',
+            'Content-Type' : 'application/json',
+        },
+        type: 'PATCH',
+        data: JSON.stringify({ "fields": {"open_crop_binding": opencrop_id} }),
+        async: false,
+        success:function(data){
+            console.log('Success!');
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+            console.log('Error!');
+            /*弹出jqXHR对象的信息*/
             //alert(jqXHR.responseText);
             //alert(jqXHR.status);
             //alert(jqXHR.readyState);

@@ -20,6 +20,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.1/fingerprint2.min.js"></script>
   <script src="http://chriszarate.github.io/sheetrock/dist/sheetrock.min.js"></script>
   <script src="https://apis.google.com/js/api.js"></script>
+  <script src="app.js"></script>
 
       <link href="https://sdkcarlos.github.io/sites/holdon-resources/css/HoldOn.css" rel="stylesheet">
           <script src="https://sdkcarlos.github.io/sites/holdon-resources/js/HoldOn.js"></script>
@@ -57,6 +58,10 @@ $(function(){
             type: 'post',
             data: { "fields": objectifyForm($('#activity_form').serializeArray()) },
             success:function(data){
+                opencrop = search_unique_opencrop(data['fields']['crop_name']);
+                if(opencrop){
+                    binding_opencrop(data['id'], opencrop['id']);
+                }
                 alert('上傳成功，謝謝您的幫忙！');
                 location.reload(true);
             },
