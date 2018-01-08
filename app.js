@@ -13,6 +13,22 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+// https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
+function getLocation(href) {
+    var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+    return match && {
+        href: href,
+        protocol: match[1],
+        host: match[2],
+        hostname: match[3],
+        port: match[4],
+        pathname: match[5],
+        search: match[6],
+        hash: match[7],
+        root: match[1] + '//' + match[2] + '/'
+    }
+}
+
 var UploadCrop = {
     findByOpenCropId: function(id) {
         crops = [];
@@ -28,6 +44,29 @@ var UploadCrop = {
 
         return crops;
     },
+};
+
+var OpenCrop = {
+    set_cover: function(id, url) {
+        if(confirm('Set cover photo?')) {
+            $.ajax({
+                url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/' + id,
+                headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV',
+                    'Content-Type' : 'application/json',
+                },
+                type: 'PATCH',
+                data: JSON.stringify({ "fields": {"cover": url} }),
+                async: false,
+                success:function(data){
+                    alert('Success!');
+                    location.reload(true);
+                },
+                error:function(jqXHR, textStatus, errorThrown) {
+                    alert('Error!');
+                }
+            });
+        }
+    }
 };
 
 function get_opencrops() {
@@ -69,7 +108,13 @@ function get_opencrop(id) {
             data['common_names_zh'] = crop['fields']['common_names_zh'];
             data['common_names'] = crop['fields']['common_names'];
             data['binomial_name'] = crop['fields']['binomial_name']?crop['fields']['binomial_name']:crop['id'];
-            data['cover'] = crop['fields']['cover'] ? crop['fields']['cover'] : '/No_Cover.jpg';
+            if(crop['fields']['cover']){
+                parse_url = getLocation(crop['fields']['cover']);
+                new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
+                data['cover'] = new_url;
+            } else {
+                data['cover'] = '/No_Cover.jpg';
+            }
             data['family'] = (crop['fields']['family']?crop['fields']['family'] + ' ':'') + (crop['fields']['family_zh']?crop['fields']['family_zh']:'');
             data['genus'] = (crop['fields']['genus']?crop['fields']['genus'] + ' ':'') + (crop['fields']['genus_zh']?crop['fields']['genus_zh']:'');
             data['species'] = (crop['fields']['species']?crop['fields']['species'] + ' ':'') + (crop['fields']['species_zh']?crop['fields']['species_zh']:'');
