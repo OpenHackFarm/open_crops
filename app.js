@@ -13,6 +13,23 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+var UploadCrop = {
+    findByOpenCropId: function(id) {
+        crops = [];
+
+        $.ajax({
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload?filterByFormula={open_crop_binding}="' + id + '"',
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+            type: 'get',
+            async: false,
+            success:function(data){ crops = data['records']; },
+            error:function(jqXHR, textStatus, errorThrown) { }
+        });
+
+        return crops;
+    },
+};
+
 function get_opencrops() {
     crops = [];
 
@@ -60,21 +77,6 @@ function get_opencrop(id) {
             data['origin'] = crop['fields']['origin'];
 
             render_detail(data);
-            // dataSet = [];
-            //
-            // $.each(data['records'], function(idx, li) {
-            //     // object to array
-            //     //arr = Object.keys(li['fields']).map(function (key) { return li['fields'][key] ? li['fields'][key] : ''; });
-            //
-            //     dataSet.push([li['fields']['crop_name'], li['fields']['crop_variety'], li['fields']['address'], "<a target='_blank' href='" + li['fields']['image_url'] + "'>image</a>", "<a href='#' onclick='verify(\"" + li['id'] + "\")'>verify</a>", (li['fields']['open_crop_binding'] != "null") ? "" : "<a href='scientific.html?name=" + li['fields']['crop_name'] + "&id=" + li['id'] + "'>create</a>"]);
-            // });
-            //
-            // // console.log(dataSet);
-            //
-            // $('#example').DataTable( {
-            //     data: dataSet,
-            //     paging: false
-            // } );
         },
         error:function(jqXHR, textStatus, errorThrown) {
             //alert(jqXHR.responseText);
