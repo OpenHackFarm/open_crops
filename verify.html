@@ -45,8 +45,15 @@ function verify(id){
 				$.each(data['records'], function(idx, li) {
 					// object to array
 					//arr = Object.keys(li['fields']).map(function (key) { return li['fields'][key] ? li['fields'][key] : ''; });
+                    row = []
+                    row.push(li['fields']['crop_name']);
+                    row.push(li['fields']['crop_variety'] ? li['fields']['crop_variety'] : '');
+                    row.push(li['fields']['address'] ? li['fields']['address'] : '')
+                    row.push(li['fields']['open_crop_binding'] ? "" : "<a href='scientific.html?name=" + li['fields']['crop_name'] + "&id=" + li['id'] + "'>create</a> | <a href='bind.html?id=" + li['id'] + "&name=" + li['fields']['crop_name'] + "'>bind</a>");
+                    row.push("<a target='_blank' href='" + li['fields']['image_url'] + "'>image</a>");
+                    row.push("<a href='#' onclick='verify(\"" + li['id'] + "\")'>verify</a>");
 
-                  dataSet.push([li['fields']['crop_name'], li['fields']['crop_variety'], li['fields']['address'], "<a target='_blank' href='" + li['fields']['image_url'] + "'>image</a>", "<a href='#' onclick='verify(\"" + li['id'] + "\")'>verify</a>", (li['fields']['open_crop_binding'] != "null") ? "" : "<a href='scientific.html?name=" + li['fields']['crop_name'] + "&id=" + li['id'] + "'>create</a>"]);
+                  dataSet.push(row);
 				});
 
 				// console.log(dataSet);
@@ -77,9 +84,9 @@ function verify(id){
 			  <th>名稱</th>
 			  <th>品種</th>
 			  <th>地點</th>
+			  <th>條目</th>
 			  <th>照片</th>
 			  <th>認證圖片</th>
-			  <th>新建</th>
 		  </tr>
 	  </thead>
 	  <tfoot>
@@ -87,9 +94,9 @@ function verify(id){
 			  <th>名稱</th>
 			  <th>品種</th>
 			  <th>地點</th>
+			  <th>條目</th>
 			  <th>照片</th>
 			  <th>認證圖片</th>
-			  <th>新建</th>
 		  </tr>
 	  </tfoot>
   </table>

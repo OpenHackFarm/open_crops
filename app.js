@@ -13,6 +13,32 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+function get_opencrops() {
+    crops = [];
+
+    $.ajax({
+        // url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
+        url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=id",
+        headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+        type: 'get',
+        async: false,
+        success:function(data){
+            crops = data['records'];
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+            //alert(jqXHR.responseText);
+            //alert(jqXHR.status);
+            //alert(jqXHR.readyState);
+            //alert(jqXHR.statusText);
+            /*弹出其他两个参数的信息*/
+            //alert(textStatus);
+            //alert(errorThrown);
+        }
+    });
+
+    return crops;
+}
+
 function get_opencrop(id) {
     $.ajax({
         url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/" + id,
@@ -88,6 +114,8 @@ function search_unique_opencrop(name) {
 }
 
 function binding_opencrop(upload_id, opencrop_id) {
+    ret = false;
+
     $.ajax({
         url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload/' + upload_id,
         headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV',
@@ -97,10 +125,12 @@ function binding_opencrop(upload_id, opencrop_id) {
         data: JSON.stringify({ "fields": {"open_crop_binding": opencrop_id} }),
         async: false,
         success:function(data){
-            console.log('Success!');
+            // console.log('Success!');
+            ret =  true;
         },
         error:function(jqXHR, textStatus, errorThrown) {
-            console.log('Error!');
+            // console.log('Error!');
+
             /*弹出jqXHR对象的信息*/
             //alert(jqXHR.responseText);
             //alert(jqXHR.status);
@@ -111,6 +141,60 @@ function binding_opencrop(upload_id, opencrop_id) {
             //alert(errorThrown);
         }
     });
+
+    return ret;
+}
+
+function append_opencrop_common_name(id, name) {
+    ret = false;
+
+    // get crop
+    crop = null;
+    $.ajax({
+        url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/" + id,
+        headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+        type: 'get',
+        async: false,
+        success:function(data){
+            console.log(data);
+
+            crop = data;
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+            ret = false;
+        }
+    });
+
+    if(crop) {
+        names = crop['fields']['common_names_zh'];
+        name_list = names.split(',');
+
+        // if name not in common_names_zh
+        if(names.indexOf(name) == -1) {
+            names += ', ' + name;
+
+            // update names
+            $.ajax({
+                url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/' + id,
+                headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV',
+                    'Content-Type' : 'application/json',
+                },
+                type: 'PATCH',
+                data: JSON.stringify({ "fields": {"common_names_zh": names} }),
+                async: false,
+                success:function(data){
+                    ret = true;
+                },
+                error:function(jqXHR, textStatus, errorThrown) {
+                    ret = false;
+                }
+            });
+        } else {
+            ret = true;
+        }
+    }
+
+    return ret;
 }
 
 function render(mustache, data, id) {
