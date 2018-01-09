@@ -29,6 +29,11 @@ function getLocation(href) {
     }
 }
 
+function precisionRound(number, precision) {
+    var factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+}
+
 var UploadCrop = {
     findByOpenCropId: function(id) {
         crops = [];
@@ -105,6 +110,7 @@ function get_opencrop(id) {
 
             data = [];
             data['id'] = crop['id'];
+            data['AMIS'] = crop['fields']['AMIS'];
             data['common_names_zh'] = crop['fields']['common_names_zh'];
             data['common_names'] = crop['fields']['common_names'];
             data['binomial_name'] = crop['fields']['binomial_name']?crop['fields']['binomial_name']:crop['id'];
@@ -121,7 +127,7 @@ function get_opencrop(id) {
             data['variety'] = (crop['fields']['variety']?crop['fields']['variety'] + ' ':'') + (crop['fields']['variety_zh']?crop['fields']['variety_zh']:'');
             data['origin'] = crop['fields']['origin'];
             data['invasive'] = (crop['fields']['invasive'] == 'Y') ? '具有入侵性' : '';
-            data['cultivation'] = crop['fields']['cultivation'];
+            data['propagate'] = crop['fields']['propagate'];
             data['row_spacing'] = crop['fields']['row_spacing'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
@@ -276,4 +282,51 @@ function render_detail(data) {
     render('detail.heading.mustache', data, '#heading');
     render('detail.picture.mustache', data, '#picture');
     render('detail.information.mustache', data, '#information');
+}
+
+function get_template(path) {
+    template = '';
+
+    $.ajax({
+        url: path,
+        async: false,
+        success: function(t){ template = t; }
+    });
+
+    return template;
+}
+
+function count_temperature(temperatures) {
+    data = {};
+    data['hot_count'] = 0;
+    data['warm_count'] = 0;
+    data['cool_count'] = 0;
+    data['cold_count'] = 0;
+    total_temperatue = 0;
+
+    total_count = temperatures.length;
+    data['max_temperature'] = total_count ? Math.max.apply(Math, temperatures) : '-';
+    data['min_temperature'] = total_count ? Math.min.apply(Math, temperatures) : '-';
+
+    $.each(temperatures, function(index, value) {
+        total_temperatue += value;
+        if(value<10) {
+            data['cold_count']++;
+        } else if(value>=10 && value<20) {
+            data['cool_count']++;
+        } else if(value>=20 && value<30) {
+            data['warm_count']++;
+        } else if(value>=30) {
+            data['hot_count']++;
+        }
+    });
+
+    data['hot_percent'] = total_count ? data['hot_count'] / total_count * 100 : 0;
+    data['warm_percent'] = total_count ? data['warm_count'] / total_count * 100 : 0;
+    data['cool_percent'] = total_count ? data['cool_count'] / total_count * 100 : 0;
+    data['cold_percent'] = total_count ? data['cold_count'] / total_count * 100 : 0;
+
+    data['avg_temperature'] = total_count ? precisionRound(total_temperatue / total_count, 2) : '-';
+
+    return data;
 }
