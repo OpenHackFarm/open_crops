@@ -31,7 +31,10 @@
             $('#upload_id').val(decodeURIComponent(getUrlParameter('id')));
 
             $.each(get_opencrops(), function(idx, li) {
-                $('#opencrop_id').append($("<option></option>").attr("value", li['id']).text(li['fields']['id'] + '. ' + li['fields']['common_names_zh']));
+                text = li['fields']['id'] + '. ' + li['fields']['common_names_zh'];
+                text += ' (' + (li['fields']['variety']?li['fields']['variety']:'') + ' ';
+                text += (li['fields']['variety_zh']?li['fields']['variety_zh']:'') + ')';
+                $('#opencrop_id').append($("<option></option>").attr("value", li['id']).text(text));
             });
 
             $("#activity_form").submit(function( event ) {
@@ -41,7 +44,7 @@
                 if(binding_opencrop(form[1]['value'], form[2]['value']) && append_opencrop_common_name(form[2]['value'], form[0]['value'])){
                     alert('Success!');
 
-                    window.location.replace('verify.html');
+                    window.history.back();
                 } else {
                     alert('Error!');
                 };

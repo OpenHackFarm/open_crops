@@ -45,7 +45,7 @@
                 $.each(crops, function(index, value){
                     parse_url = getLocation(value['fields']['image_url']);
                     new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
-                    html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'alt': value['id'], 'thumbnail': new_url, 'image_url': value['fields']['image_url']});
+                    html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'media_id': value['id'], 'alt': value['fields']['crop_name'], 'thumbnail': new_url, 'image_url': value['fields']['image_url']});
                 });
                 $('#media').html(html);
                 /* render uploaded images */
