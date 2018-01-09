@@ -35,19 +35,19 @@
                   cols = [];
 				  habit = '';
 				  // if(li['fields']['habit'] == '草本') {
-					//habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" data-original-title="">Shrub</div>';
+					//habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" title="草本">Shrub</div>';
                   if(li['fields']['habit'] == '草質藤本') {
-					habit += '<div class="iconbar-icon niche-icon niche-icon-climber" data-original-title="">Climber</div>';
+					habit += '<div class="iconbar-icon niche-icon niche-icon-climber" title="草質藤本">Climber</div>';
                   } else if(li['fields']['habit'] == '喬木') {
-					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" title="喬木">Canopy</div>';
                   } else if(li['fields']['habit'] == '灌木') {
-					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" title="灌木">Canopy</div>';
                   }
 				  if(li['fields']['ground_cover'] == 'Y') {
-					habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" data-original-title="">Soil surface</div>';
+					habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" title="覆地">Soil surface</div>';
                   }
 				  if(li['fields']['aquatic'] == 'Y') {
-                    habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
+                    habit += '<div class="iconbar-icon water-icon water-icon-aquatic" title="水生"></div>';
                   }
                   cols.push(habit);
                   cols.push('<a href="detail.html?id=' + li['id'] + '">' + li['fields']['common_names_zh'] + '</a>');
