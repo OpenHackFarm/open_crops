@@ -43,7 +43,7 @@
 
                 html = '';
                 $.each(upload_crops, function(index, value){
-                    if(value['fields']['cover']) {
+                    if(value['fields']['image_url']) {
                         parse_url = getLocation(value['fields']['image_url']);
                         new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
                     } else {
