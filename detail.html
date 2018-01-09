@@ -42,7 +42,7 @@
                 });
 
                 html = '';
-                $.each(crops, function(index, value){
+                $.each(upload_crops, function(index, value){
                     parse_url = getLocation(value['fields']['image_url']);
                     new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
                     html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'media_id': value['id'], 'alt': value['fields']['crop_name'], 'thumbnail': new_url, 'image_url': value['fields']['image_url']});
@@ -50,9 +50,51 @@
                 $('#media').html(html);
                 /* render uploaded images */
 
+                /* render alternate species */
+                crop = '';
+                $.ajax({
+                    url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/" + getUrlParameter('id'),
+                    headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+                    type: 'get',
+                    async: false,
+                    success:function(data){
+                        crop = data;
+                    },
+                    error:function(jqXHR, textStatus, errorThrown) {
+                    }
+
+                });
+
+                if(crop['fields']['species']) {
+                    species = OpenCrop.findBySpecies(crop['fields']['species']);
+
+                    template = '';
+                    $.ajax({
+                        url: 'templates/detail.alternate.mustache',
+                        async: false,
+                        success: function(t){ template = t; }
+                    });
+
+                    html = '';
+                    $.each(species, function(index, value){
+                        if(value['id'] != getUrlParameter('id')) {
+                            parse_url = getLocation(value['fields']['cover']);
+                            new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
+
+                            name = value['fields']['common_names_zh'];
+                            name += ' (' + (value['fields']['variety']?value['fields']['variety'] + ' ':'');
+                            name += (value['fields']['variety_zh']?value['fields']['variety_zh']:'') + ')';
+
+                            html += Mustache.to_html(template, {'id': value['id'], 'name': name, 'thumbnail': new_url});
+                        }
+                    });
+                    $('#alternate').html(html);
+                }
+                /* render alternate species */
+
                 /* render temperature */
                 temperatures = [];
-                $.each(crops, function(index, value) {
+                $.each(upload_crops, function(index, value) {
                     if(value['fields']['temperature']) {
                         temperatures.push(value['fields']['temperature']);
                     }
@@ -113,6 +155,16 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                              Alternate 
+                            </div>
+                            <div class="panel-body row-fluid" id="alternate">
                             </div>
                         </div>
                     </div>

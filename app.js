@@ -71,6 +71,20 @@ var OpenCrop = {
                 }
             });
         }
+    },
+    findBySpecies: function(name) {
+        crops = [];
+
+        $.ajax({
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?filterByFormula={species}="' + name + '"',
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+            type: 'get',
+            async: false,
+            success:function(data){ crops = data['records']; },
+            error:function(jqXHR, textStatus, errorThrown) { }
+        });
+
+        return crops;
     }
 };
 
