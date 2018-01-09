@@ -121,7 +121,7 @@ function get_opencrop(id) {
             } else {
                 data['cover'] = '/No_Cover.jpg';
             }
-            data['family'] = (crop['fields']['family']?crop['fields']['family'] + ' ':'') + (crop['fields']['family_zh']?crop['fields']['family_zh']:'');
+            data['family'] = (crop['fields']['family'] ? '<a href="index.html?family=' + crop['fields']['family'] + '">' + crop['fields']['family'] + '</a>' + ' ' : '') + (crop['fields']['family_zh']?crop['fields']['family_zh']:'');
             data['genus'] = (crop['fields']['genus']?crop['fields']['genus'] + ' ':'') + (crop['fields']['genus_zh']?crop['fields']['genus_zh']:'');
             data['species'] = (crop['fields']['species']?crop['fields']['species'] + ' ':'') + (crop['fields']['species_zh']?crop['fields']['species_zh']:'');
             data['variety'] = (crop['fields']['variety']?crop['fields']['variety'] + ' ':'') + (crop['fields']['variety_zh']?crop['fields']['variety_zh']:'');
@@ -131,19 +131,19 @@ function get_opencrop(id) {
             data['row_spacing'] = crop['fields']['row_spacing'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
-                habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" data-original-title="">Shrub</div>';
+                habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" title="草本">Shrub</div>';
             } else if(crop['fields']['habit'] == '草質藤本') {
-                habit += '<div class="iconbar-icon niche-icon niche-icon-climber" data-original-title="">Climber</div>';
+                habit += '<div class="iconbar-icon niche-icon niche-icon-climber" title="草質藤本">Climber</div>';
             } else if(crop['fields']['habit'] == '喬木') {
-                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" title="喬木">Canopy</div>';
             } else if(crop['fields']['habit'] == '灌木') {
-                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" data-original-title="">Canopy</div>';
+                habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" title="灌木">Canopy</div>';
             }
             if(crop['fields']['ground_cover'] == 'Y') {
-                habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" data-original-title="">Soil surface</div>';
+                habit += '<div class="iconbar-icon niche-icon niche-icon-soil_surface" title="覆地">Soil surface</div>';
             }
             if(crop['fields']['aquatic'] == 'Y') {
-                habit += '<div class="iconbar-icon water-icon water-icon-aquatic"></div>';
+                habit += '<div class="iconbar-icon water-icon water-icon-aquatic" title="水生"></div>';
             }
             data['icons'] = habit;
 
@@ -278,10 +278,10 @@ function render(mustache, data, id) {
 }
 
 function render_detail(data) {
-    render('detail.header.mustache', data, '#header');
-    render('detail.heading.mustache', data, '#heading');
-    render('detail.picture.mustache', data, '#picture');
-    render('detail.information.mustache', data, '#information');
+    render('templates/detail.header.mustache', data, '#header');
+    render('templates/detail.heading.mustache', data, '#heading');
+    render('templates/detail.picture.mustache', data, '#picture');
+    render('templates/detail.information.mustache', data, '#information');
 }
 
 function get_template(path) {

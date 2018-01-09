@@ -1,0 +1,133 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>OpenCrop</title>
+        <meta name="vireport" content="width=divice-width">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="pokedex-angularjs-platzi/assets/css/bootstrap.min.css">
+        <link href="skin/css/main.css" rel="stylesheet" media="screen">
+        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
+        <script src="app.js"></script>
+        <style>
+        #container {
+            margin-top: 50px;
+        }
+        .thumbnail img {
+            height: 100px;
+            width: 100px;
+        }
+        .navbar-brand img {
+            height: 20px;
+        }
+        #pokemon .thumbnail img {
+            /* height: 300px; */
+            /* width: inherit; */
+            width: 350px;
+            height: inherit;
+        }
+        </style>
+        <script>
+            $(function(){
+                get_opencrop(getUrlParameter('id'));
+
+                /* render uploaded images */
+                upload_crops = UploadCrop.findByOpenCropId(getUrlParameter('id'));
+
+                template = '';
+                $.ajax({
+                    url: 'templates/detail.media.mustache',
+                    async: false,
+                    success: function(t){ template = t; }
+                });
+
+                html = '';
+                $.each(crops, function(index, value){
+                    parse_url = getLocation(value['fields']['image_url']);
+                    new_url = parse_url['root'] + '350x350' + parse_url['pathname'];
+                    html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'alt': value['id'], 'thumbnail': new_url, 'image_url': value['fields']['image_url']});
+                });
+                $('#media').html(html);
+                /* render uploaded images */
+
+                /* render temperature */
+                temperatures = [];
+                $.each(crops, function(index, value) {
+                    if(value['fields']['temperature']) {
+                        temperatures.push(value['fields']['temperature']);
+                    }
+                });
+                data = count_temperature(temperatures);
+
+                render('templates/detail.temperature.mustache', data, '#temperature');
+                /* render temperature */
+            });
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="pull-right" style="margin-top: 15px;">
+                </div>
+                <div class="navbar-header">
+                    <a href="/" class="navbar-brand">OpenCrop</a>
+
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="container" class="container-fluid">
+            <!-- ngView:  --><div data-ng-view="" class="ng-scope"><div id="pokemon" class="container-fluid ng-scope" data-ng-controller="PokemonController">
+                    <div class="page-header" id="header">
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" id="heading">
+                               --
+                            </div>
+                            <div class="panel-body row-fluid">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Picture</div>
+                                        <div class="panel-body" id="picture">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Information</div>
+                                        <div class="panel-body" id="information">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Temperature</div>
+                                        <div class="panel-body" id="temperature">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                               Media
+                            </div>
+                            <div class="panel-body row-fluid" id="media">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

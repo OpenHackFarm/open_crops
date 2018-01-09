@@ -1,0 +1,53 @@
+<div class="col-md-7">
+<dl>
+    <dt>30 ~ 40 <small>({{ hot_count }})</small></dt>
+    <dd>
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-danger" style="width: {{ hot_percent }}%"></div>
+    </div>
+    </dd>
+</dl>
+<dl>
+    <dt>20 ~ 30 <small>({{ warm_count }})</small></dt>
+    <dd>
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-warning" style="width: {{ warm_percent }}%"></div>
+    </div>
+    </dd>
+</dl>
+<dl>
+    <dt>10 ~ 20 <small>({{ cool_count }})</small></dt>
+    <dd>
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-success" style="width: {{ cool_percent }}%"></div>
+    </div>
+    </dd>
+</dl>
+<dl>
+    <dt>0 ~ 10 <small>({{ cold_count }})</small></dt>
+    <dd>
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-info" style="width: {{ cold_percent }}%"></div>
+    </div>
+    </dd>
+</dl>
+</div>
+<div class="col-md-5">
+    <div class="panel panel-info">
+        <div class="panel-heading">Stats</div>
+        <table class="table">
+            <tr>
+                <td>Max:</td>
+                <td>{{ max_temperature }}</td>
+            </tr>
+            <tr>
+                <td>Avg:</td>
+                <td>{{ avg_temperature }}</td>
+            </tr>
+            <tr>
+                <td>Min:</td>
+                <td>{{ min_temperature }}</td>
+            </tr>
+        </table>
+    </div><!--panel-->
+</div>
