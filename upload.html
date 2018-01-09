@@ -46,6 +46,28 @@ function objectifyForm(formArray) {//serialize data function
 }
 
 $(function(){
+    if(getUrlParameter('id')) {
+        $('#open_crop_binding').val(decodeURIComponent(getUrlParameter('id')));
+
+        crop = null;
+        $.ajax({
+            url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop/" + decodeURIComponent(getUrlParameter('id')),
+            headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+            type: 'get',
+            async: false,
+            success:function(data){
+                crop = data;
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+            }
+        });
+
+        if(crop) {
+            $('#crop_name').val(crop['fields']['common_names_zh']);
+            $('#crop_variety').val(crop['fields']['variety_zh']);
+        }
+    }
+
     $("#activity_form").submit(function( event ) {
         event.preventDefault();
 
@@ -126,6 +148,7 @@ $(function(){
                 <input id="fileupload" type="file" name="postimage">
             </div>
             <input id="image_url" type="hidden" name="image_url">
+            <input id="open_crop_binding" type="hidden" name="open_crop_binding">
             <input id="fingerprint" type="hidden" name="fingerprint">
             <button type="submit" class="btn btn-primary btn-lg btn-block">上傳</button>
         </form>
