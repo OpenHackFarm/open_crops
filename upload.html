@@ -85,7 +85,7 @@ $(function(){
                     binding_opencrop(data['id'], opencrop['id']);
                 }
                 alert('上傳成功，謝謝您的幫忙！');
-                window.location = "/";
+                window.history.back();
             },
             error:function(jqXHR, textStatus, errorThrown) {
                 alert('上傳失敗');
