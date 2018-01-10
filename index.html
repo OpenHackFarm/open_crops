@@ -30,6 +30,7 @@
             success:function(data){
 				// console.log(data);
 				dataSet = [];
+                families = []
 
 				$.each(data['records'], function(idx, li) {
                   cols = [];
@@ -64,6 +65,10 @@
                   }
 
                   dataSet.push(cols);
+
+                    if(li['fields']['family'] && families.indexOf(li['fields']['family']) == -1){
+                        families.push(li['fields']['family']);
+                    }
 				});
 
 				// console.log(dataSet);
@@ -72,7 +77,7 @@
                         data: dataSet,
                         order: [[2, 'asc'], [3, 'asc'], [4, 'asc']],
                         paging: false,
-                        language: { "search": "", "searchPlaceholder": "搜尋作物..." },
+                        language: { "search": "", "searchPlaceholder": "搜尋 " + families.length + " 種科別，" + data['records'].length + " 種作物..." },
                         initComplete : function() {
                             $("#example_filter").detach().appendTo('#new-search-area');
                         },
