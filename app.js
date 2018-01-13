@@ -143,6 +143,7 @@ function get_opencrop(id) {
             data['invasive'] = (crop['fields']['invasive'] == 'Y') ? '具有入侵性' : '';
             data['propagate'] = crop['fields']['propagate'];
             data['row_spacing'] = crop['fields']['row_spacing'];
+            data['comment'] = crop['fields']['comment'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
                 habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" title="草本">Shrub</div>';
