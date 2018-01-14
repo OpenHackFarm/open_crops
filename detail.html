@@ -103,7 +103,7 @@
                 /* render temperature */
                 temperatures = [];
                 $.each(upload_crops, function(index, value) {
-                    if(value['fields']['temperature']) {
+                    if(value['fields']['temperature'] && (value['fields']['unhealthy'] != 'Y')) {
                         temperatures.push(value['fields']['temperature']);
                     }
                 });
