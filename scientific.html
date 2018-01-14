@@ -52,6 +52,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 $(document).ready(function() {
     $('#common_names_zh').val(decodeURIComponent(getUrlParameter('name')));
+    $('#variety_zh').val(decodeURIComponent(getUrlParameter('variety')));
 });
 
 function objectifyForm(formArray) {//serialize data function
@@ -200,6 +201,7 @@ $(function(){
                     <option value="" selected></option>;
                     <option value="草本">草本</option>;
                     <option value="草質藤本">草質藤本</option>;
+                    <option value="小灌木">小灌木</option>;
                     <option value="灌木">灌木</option>;
                     <option value="喬木">喬木</option>;
                 </select>
