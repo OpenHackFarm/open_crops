@@ -14,7 +14,23 @@
         </tr>
         <tr>
             <td><strong>品種</strong></td>
-            <td class="ng-binding">{{ variety }}</td>
+            <td class="ng-binding"><b>{{ variety }}</b></td>
+        </tr>
+        <tr>
+            <td><strong>繁殖方式</strong></td>
+            <td class="ng-binding">{{ propagate }}</td>
+        </tr>
+        <tr>
+            <td><strong>植株間距 (株距, 行距, 高度) (cm)</strong></td>
+            <td class="ng-binding">{{ spread }} / {{ row_spacing }} / {{ height}}</td>
+        </tr>
+        <tr>
+            <td><strong>日照需求</strong></td>
+            <td class="ng-binding">{{ sun }}</td>
+        </tr>
+        <tr>
+            <td><strong>市場行情 (twfood.cc)</strong></td>
+            <td class="ng-binding"><a href="https://www.twfood.cc/vege/{{ AMIS }}">{{ AMIS }}</a></td>
         </tr>
         <tr>
             <td><strong>原產地</strong></td>
@@ -23,22 +39,6 @@
         <tr>
             <td><strong>是否有入侵性</strong></td>
             <td class="ng-binding">{{ invasive }}</td>
-        </tr>
-        <tr>
-            <td><strong>繁殖方式</strong></td>
-            <td class="ng-binding">{{ propagate }}</td>
-        </tr>
-        <tr>
-            <td><strong>日照需求</strong></td>
-            <td class="ng-binding">{{ sun }}</td>
-        </tr>
-        <tr>
-            <td><strong>植株間距 (cm)</strong></td>
-            <td class="ng-binding">{{ row_spacing }}</td>
-        </tr>
-        <tr>
-            <td><strong>市場行情 (twfood.cc)</strong></td>
-            <td class="ng-binding"><a href="https://www.twfood.cc/vege/{{ AMIS }}">{{ AMIS }}</a></td>
         </tr>
         <tr>
             <td><strong>備註</strong></td>

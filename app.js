@@ -142,7 +142,9 @@ function get_opencrop(id) {
             data['origin'] = crop['fields']['origin'];
             data['invasive'] = (crop['fields']['invasive'] == 'Y') ? '具有入侵性' : '';
             data['propagate'] = crop['fields']['propagate'];
+            data['spread'] = crop['fields']['spread'];
             data['row_spacing'] = crop['fields']['row_spacing'];
+            data['height'] = crop['fields']['height'];
             data['comment'] = crop['fields']['comment'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
