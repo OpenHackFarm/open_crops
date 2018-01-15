@@ -31,7 +31,7 @@
   $(document).ready(function() {
         $.ajax({
           // url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sort=" + jQuery.param({fields: ["family"]}),
-            url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family&filterByFormula={herb}="Y"',
             headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
             type: 'get',
             success:function(data){
