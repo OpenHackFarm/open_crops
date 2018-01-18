@@ -29,17 +29,32 @@
   <script src="app.js"></script>
   <script>
   $(document).ready(function() {
+        all_records = [];
         $.ajax({
           // url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sort=" + jQuery.param({fields: ["family"]}),
             url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family",
             headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
             type: 'get',
+            async: false,
             success:function(data){
-				// console.log(data);
+                all_records = data['records'];
+
+                // fetch next records
+                $.ajax({
+                    url: "https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop?sortField=family&offset=" + data['offset'],
+                    headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
+                    type: 'get',
+                    async: false,
+                    success:function(data){
+                        $.each(data['records'], function(idx, li) {
+                            all_records.push(li);
+                        });
+                    }
+                });
+
 				dataSet = [];
                 families = []
-
-				$.each(data['records'], function(idx, li) {
+				$.each(all_records, function(idx, li) {
                   cols = [];
 				  habit = '';
 				  // if(li['fields']['habit'] == '草本') {
