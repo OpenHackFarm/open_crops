@@ -39,7 +39,7 @@ var UploadCrop = {
         crops = [];
 
         $.ajax({
-            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload?filterByFormula={open_crop_binding}="' + id + '"',
+            url: 'https://api.airtable.com/v0/appSHD6QX03beYde1/open_crop_upload?filterByFormula={open_crop_binding}="' + id + '"&sortField=exif_datetime',
             headers: { 'Authorization': 'Bearer key5cOGuWwOqmI1DV' },
             type: 'get',
             async: false,
