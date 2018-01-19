@@ -44,7 +44,8 @@ if __name__ == '__main__':
                 print tags['EXIF DateTimeOriginal']
 
                 old_datetime = str(tags['EXIF DateTimeOriginal'])
-                new_datetime = datetime.datetime.strptime(old_datetime, '%Y:%m:%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
+                new_datetime = datetime.datetime.strptime(old_datetime, '%Y:%m:%d %H:%M:%S') + datetime.timedelta(hours=-8)
+                new_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
                 update_open_crop(i['id'], json.dumps({'fields': {'exif_datetime': new_datetime}}))
             else:
