@@ -59,8 +59,8 @@
 				  habit = '';
 				  // if(li['fields']['habit'] == '草本') {
 					//habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" title="草本">Shrub</div>';
-                  if(li['fields']['habit'] == '草質藤本') {
-					habit += '<div class="iconbar-icon niche-icon niche-icon-climber" title="草質藤本">Climber</div>';
+                  if(li['fields']['habit'] > '藤本') {
+					habit += '<div class="iconbar-icon niche-icon niche-icon-climber" title="' + li['fields']['habit'] + '">Climber</div>';
                   } else if(li['fields']['habit'] == '喬木') {
 					habit += '<div class="iconbar-icon niche-icon niche-icon-canopy" title="喬木">Canopy</div>';
                   } else if(li['fields']['habit'] == '灌木') {
