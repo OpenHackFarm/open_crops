@@ -40,10 +40,10 @@ if __name__ == '__main__':
             print find_file
 
             tags = read_exif_data(find_file)
-            if 'Image DateTime' in tags:
-                print tags['Image DateTime']
+            if 'EXIF DateTimeOriginal' in tags:
+                print tags['EXIF DateTimeOriginal']
 
-                old_datetime = str(tags['Image DateTime'])
+                old_datetime = str(tags['EXIF DateTimeOriginal'])
                 new_datetime = datetime.datetime.strptime(old_datetime, '%Y:%m:%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
 
                 update_open_crop(i['id'], json.dumps({'fields': {'exif_datetime': new_datetime}}))
