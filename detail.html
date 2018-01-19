@@ -49,7 +49,7 @@
                     } else {
                         new_url = '/No_Cover.jpg';
                     }
-                    html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'media_id': value['id'], 'alt': value['fields']['crop_name'], 'thumbnail': new_url, 'image_url': value['fields']['image_url']});
+                    html += Mustache.to_html(template, {'id': getUrlParameter('id'), 'media_id': value['id'], 'alt': value['fields']['crop_name'], 'thumbnail': new_url, 'image_url': value['fields']['image_url'], 'datetime': value['fields']['exif_datetime']});
                 });
                 $('#media').html(html);
                 /* render uploaded images */
