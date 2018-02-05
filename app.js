@@ -146,6 +146,15 @@ function get_opencrop(id) {
             data['row_spacing'] = crop['fields']['row_spacing'];
             data['height'] = crop['fields']['height'];
             data['comment'] = crop['fields']['comment'];
+            data['life_cycle'] = crop['fields']['life_cycle'];
+            data['avg_germination'] = crop['fields']['avg_germination'];
+            data['avg_transplanting'] = crop['fields']['avg_transplanting'];
+            data['avg_total_growing_days'] = crop['fields']['avg_total_growing_days'];
+            data['sun'] = crop['fields']['sun'];
+            data['watering'] = crop['fields']['watering'];
+            data['fertilizer'] = crop['fields']['fertilizer'];
+            data['min_pH'] = crop['fields']['min_pH'];
+            data['max_pH'] = crop['fields']['max_pH'];
             habit = '';
             if(crop['fields']['habit'] == '草本') {
                 habit += '<div class="iconbar-icon niche-icon niche-icon-shrub" title="草本">Shrub</div>';

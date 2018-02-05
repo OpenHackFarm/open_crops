@@ -17,16 +17,44 @@
             <td class="ng-binding"><b>{{ variety }}</b></td>
         </tr>
         <tr>
+            <td><strong>生命週期</strong></td>
+            <td class="ng-binding">{{ life_cycle }}</td>
+        </tr>
+        <tr>
             <td><strong>繁殖方式</strong></td>
             <td class="ng-binding">{{ propagate }}</td>
+        </tr>
+        <tr>
+            <td><strong>發芽天數</strong></td>
+            <td class="ng-binding">{{ avg_germination }}</td>
+        </tr>
+        <tr>
+            <td><strong>移植天數</strong></td>
+            <td class="ng-binding">{{ avg_transplanting }}</td>
         </tr>
         <tr>
             <td><strong>植株間距 (株距, 行距, 高度) (cm)</strong></td>
             <td class="ng-binding">{{ spread }} / {{ row_spacing }} / {{ height}}</td>
         </tr>
         <tr>
+            <td><strong>成長天數</strong></td>
+            <td class="ng-binding">{{ avg_total_growing_days }}</td>
+        </tr>
+        <tr>
             <td><strong>日照需求</strong></td>
             <td class="ng-binding">{{ sun }}</td>
+        </tr>
+        <tr>
+            <td><strong>水分需求</strong></td>
+            <td class="ng-binding">{{ watering }}</td>
+        </tr>
+        <tr>
+            <td><strong>肥分需求</strong></td>
+            <td class="ng-binding">{{ fertilizer }}</td>
+        </tr>
+        <tr>
+            <td><strong>酸鹼值</strong></td>
+            <td class="ng-binding">{{ min_pH }} ~ {{ max_pH }}</td>
         </tr>
         <tr>
             <td><strong>市場行情 (twfood.cc)</strong></td>
