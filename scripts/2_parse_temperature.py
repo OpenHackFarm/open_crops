@@ -15,7 +15,7 @@ def update_upload_crop(id, data):
 
 
 def get_month_temperature(id, name, month):
-    r = requests.get('https://raw.githubusercontent.com/OpenHackFarm/CODiS_carwler/master/data/%s_%s/%s.json' % (id, name, month))
+    r = requests.get('https://raw.githubusercontent.com/OpenHackFarm/CODiS-data/master/%s_%s/%s.json' % (id, name, month))
 
     return r.json()
 
