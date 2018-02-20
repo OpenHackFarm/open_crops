@@ -78,6 +78,7 @@
                   cols.push((li['fields']['genus']?li['fields']['genus'] + ' ':'') + (li['fields']['genus_zh']?li['fields']['genus_zh']:''));
                   cols.push((li['fields']['species']?li['fields']['species'] + ' ':'') + (li['fields']['species_zh']?li['fields']['species_zh']:''));
                   cols.push((li['fields']['variety']?li['fields']['variety'] + ' ':'') + (li['fields']['variety_zh']?li['fields']['variety_zh']:''));
+                  cols.push((li['fields']['forma']?li['fields']['forma'] + ' ':'') + (li['fields']['forma_zh']?li['fields']['forma_zh']:'') + (li['fields']['cultivar']?li['fields']['cultivar'] + ' ':'') + (li['fields']['cultivar_zh']?li['fields']['cultivar_zh']:''));
                   if(li['fields']['cover']){
                       parse_url = getLocation(li['fields']['cover']);
                       new_url = parse_url['root'] + '100x100' + parse_url['pathname'];
@@ -140,7 +141,8 @@
 			  <th>科</th>
 			  <th>屬</th>
 			  <th>種</th>
-			  <th>品種</th>
+			  <th>變種</th>
+			  <th>品型、品種</th>
 			  <th></th>
 		  </tr>
 	  </thead>
@@ -151,7 +153,8 @@
 			  <th>科</th>
 			  <th>屬</th>
 			  <th>種</th>
-			  <th>品種</th>
+			  <th>變種</th>
+			  <th>品型、品種</th>
 			  <th></th>
 		  </tr>
 	  </tfoot>
